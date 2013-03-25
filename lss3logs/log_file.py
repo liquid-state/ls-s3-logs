@@ -5,12 +5,13 @@ Default log file class representing a single log file as created by S3.
 
 import re
 import datetime
+from dateutil.parser import parse as dateutil_parse
 
 
 LINE_REGEX_STRING  = r'(\S+) (\S+) \[(.*?)\] (\S+) (\S+) ' \
            r'(\S+) (\S+) (\S+) "([^"]+)" ' \
            r'(\S+) (\S+) (\S+) (\S+) (\S+) (\S+) ' \
-           r'"([^"]+)" "([^"]+)"'
+           r'"([^"]+)" "([^"]+)" (\S+)'
 LINE_REGEX_COMPILED = re.compile(LINE_REGEX_STRING)
 
 
@@ -60,7 +61,7 @@ class LogFileEntry():
     FIELD_NAMES = ('bucket_owner', 'bucket', 'datetime', 'ip', 'requestor_id', 
     'request_id', 'operation', 'key', 'http_method_uri_proto', 'http_status', 
     's3_error', 'bytes_sent', 'object_size', 'total_time', 'turn_around_time',
-    'referer', 'user_agent')
+    'referer', 'user_agent', 'version_id')
 
     def __init__(self, line, log_file):
         self.line = line
@@ -70,7 +71,11 @@ class LogFileEntry():
 
     def parse(self):
         match = LINE_REGEX_COMPILED.match(self.line)
-        values = [match.group(1+n) for n in range(17)]
+        values = [match.group(1+n) for n in range(18)]
         for (name, value) in zip(self.FIELD_NAMES, values):
             setattr(self, name, value)
+        # fix : separating date and time instade of space
+        # so that the default dateutil parser can parse it
+        self.datetime = self.datetime.replace(':', ' ', 1)
+        self.datetime = dateutil_parse(self.datetime)
         return self
