@@ -61,17 +61,21 @@ python-testconfig is used to manage the test configuration.
 
 Copy test_config.ini.sample to test_config.ini (in the same directory) and set correct values. 
 
-export NOSE_TESTCONFIG_AUTOLOAD_INI=`pwd`/test_config.ini
+    export NOSE_TESTCONFIG_AUTOLOAD_INI=`pwd`/test_config.ini
 
 To test with nose:
 
-python setup.py nosetests
+    python setup.py nosetests
 
-nosetests -s --exe
+or running nosetests directly, 
 
-Manually, with coverage:
+    nosetests -s --exe
 
-nosetests -s --exe --with-coverage --cover-package=lss3logs
+Directly and with coverage:
+
+    nosetests -s --exe --with-coverage --cover-package=lss3logs
+
+(Note: the --exe includes python files whoch are executable, so it's optional if you don't have any.)
 
 
 Code quality
@@ -79,15 +83,12 @@ Code quality
 
 Checking code with pylint:
 
-pylint lss3logs
-
+    pylint lss3logs
 
 
 TODO
 ----
 
-* find again source of parsing code
-* add LICENSE
 * mock boto output (see https://github.com/eykd/duo/blob/master/test_duo.py for an example)
 * fix as many errors as possbile reported by pylint
 * bring test coverage to 100%
