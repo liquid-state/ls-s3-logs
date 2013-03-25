@@ -23,7 +23,7 @@ except ImportError:
 
 required_packages = [
     'boto==2.8.0',
-    'dateutil'
+    'python-dateutil'
 ]
 
 test_packages = [
