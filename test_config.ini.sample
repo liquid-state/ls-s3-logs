@@ -1,0 +1,8 @@
+[aws]
+access_key_id = MY_ACCESS_KEY
+key_secret = MY_KEY_SECRET
+s3_bucket = MY_S3_BUCKET_NAME
+logs_path = logs/
+max_logs_to_download = 2
+
+
