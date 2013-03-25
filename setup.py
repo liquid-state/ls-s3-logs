@@ -1,8 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-from distutils.command.install import INSTALL_SCHEMES
-
 
 def read_file(filename):
     """Read a file into a string"""
@@ -12,12 +10,6 @@ def read_file(filename):
         return open(filepath).read()
     except IOError:
         return ''
-
-
-# for scheme in INSTALL_SCHEMES.values():
-#     scheme['data'] = scheme['purelib']
-
-# manifest_files = [f.split(' ')[1].strip() for f in read_file('MANIFEST.in').splitlines()]
 
 
 # Hack to prevent stupid "TypeError: 'NoneType' object is not callable" error
@@ -31,6 +23,7 @@ except ImportError:
 
 required_packages = [
     'boto==2.8.0',
+    'dateutil'
 ]
 
 test_packages = [
@@ -46,7 +39,6 @@ setup(
     author='Liquid State Pty Ltd',
     author_email='dev@liquid-state.com',
     packages=find_packages(),
-    # data_files=[('', manifest_files)],
     url='https://github.com/liquid-state/ls-s3-logs',
     license='BSD',
     description=u' '.join(__import__('lss3logs').__doc__.splitlines()).strip(),
