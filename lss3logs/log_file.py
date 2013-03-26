@@ -15,7 +15,7 @@ LINE_REGEX_STRING  = r'(\S+) (\S+) \[(.*?)\] (\S+) (\S+) ' \
 LINE_REGEX_COMPILED = re.compile(LINE_REGEX_STRING)
 
 
-class LogFile():
+class LogFile(object):
     """
     Base class to represent S3 log files.
     """    
@@ -53,7 +53,15 @@ class LogFile():
         return self._entries
 
 
-class LogFileEntry():
+    def delete(self):
+        """
+        Deletes the log file on S3 as long as we have a key object.
+        """
+        if self.key:
+            self.key.delete()
+
+
+class LogFileEntry(object):
     """
     A single entry (line) in an S3 log file.
     """

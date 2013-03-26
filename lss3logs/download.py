@@ -7,7 +7,7 @@ from boto.s3.connection import S3Connection
 from .log_file import LogFile
 
 
-class Downloader():
+class Downloader(object):
     """
     Default class used to download log files. Return sequences of LogFile objects.
     """

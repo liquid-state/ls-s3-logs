@@ -12,13 +12,13 @@ from lss3logs.download import Downloader
 from lss3logs.log_file import LogFile, LogFileEntry
 
 
-class DownloaderTestCase(unittest.TestCase):
+class S3LogsTestCase(unittest.TestCase):
     """
     Tests everything there is about downloading log files
     """
 
     def __init__(self, *args, **kwargs):
-        super(DownloaderTestCase, self).__init__(*args, **kwargs)
+        super(S3LogsTestCase, self).__init__(*args, **kwargs)
         self._test_logs = None
 
 
@@ -29,12 +29,12 @@ class DownloaderTestCase(unittest.TestCase):
         print 'setting up DownloaderTestCase test function'
 
 
-    def _download_test_logs(self):
+    def _download_test_logs(self, force=False):
         """
         Downloads some log files to test with.
         This function is meant to be called by test functions.
         """
-        if self._test_logs:
+        if self._test_logs and not force:
             return self._test_logs
         aws = config['aws']
         downloader = Downloader(
@@ -86,3 +86,23 @@ class DownloaderTestCase(unittest.TestCase):
         self.assertIsInstance(
             entries[0], LogFileEntry, 
             'log entry should be a LogFileEntry object')
+
+
+    def test_deleting_logs(self):
+        """
+        Test deleting logs, checking that if 
+        we download again we get different ones.
+        """
+        self._download_test_logs()
+        self.assertTrue(
+            len(self._test_logs) > 1, 
+            'more than 1 log file are needed to test deletion')
+        first_log_file = self._test_logs[0]
+        first_log_id = first_log_file.log_id
+        first_log_file.delete()
+        self._download_test_logs(force=True)
+        self.assertNotEqual(
+            first_log_id,
+            self._test_logs[0].log_id, 
+            'first log file still present when it should have been deleted')
+
