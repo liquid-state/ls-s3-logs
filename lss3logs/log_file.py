@@ -59,6 +59,8 @@ class LogFile(object):
         """
         if self.key:
             self.key.delete()
+            return True
+        return False
 
 
 class LogFileEntry(object):

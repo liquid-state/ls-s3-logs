@@ -9,6 +9,7 @@ import datetime
 from testconfig import config
 
 from lss3logs.download import Downloader
+from lss3logs.delete import Deleter
 from lss3logs.log_file import LogFile, LogFileEntry
 
 
@@ -19,6 +20,7 @@ class S3LogsTestCase(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
         super(S3LogsTestCase, self).__init__(*args, **kwargs)
+        self._downloader = None
         self._test_logs = None
 
 
@@ -37,12 +39,12 @@ class S3LogsTestCase(unittest.TestCase):
         if self._test_logs and not force:
             return self._test_logs
         aws = config['aws']
-        downloader = Downloader(
+        self._downloader = Downloader(
             connection=None,
             aws_access_key_id=aws['access_key_id'],
             aws_key_secret=aws['key_secret'],
         )
-        self._test_logs = downloader.download_files(
+        self._test_logs = self._downloader.download_files(
             aws['s3_bucket'],
             prefix=aws['logs_path'],
             max_logs=aws['max_logs_to_download'])
@@ -88,10 +90,12 @@ class S3LogsTestCase(unittest.TestCase):
             'log entry should be a LogFileEntry object')
 
 
-    def test_deleting_logs(self):
+    def test_deleting_logs_using_keys(self):
         """
         Test deleting logs, checking that if 
         we download again we get different ones.
+        This test uses keys still in memory from 
+        when the logs were saved.
         """
         self._download_test_logs()
         self.assertTrue(
@@ -100,6 +104,38 @@ class S3LogsTestCase(unittest.TestCase):
         first_log_file = self._test_logs[0]
         first_log_id = first_log_file.log_id
         first_log_file.delete()
+        self._download_test_logs(force=True)
+        self.assertNotEqual(
+            first_log_id,
+            self._test_logs[0].log_id, 
+            'first log file still present when it should have been deleted')
+
+
+    def test_deleting_logs_using_deleter(self):
+        """
+        Test deleting logs, checking that if 
+        we download again we get different ones.
+        This test uses the Deleter class, for when 
+        we don't have boto Key objects anymore.
+        """
+        self._download_test_logs()
+        self.assertTrue(
+            len(self._test_logs) > 1, 
+            'more than 1 log file are needed to test deletion')
+        first_log_file = self._test_logs[0]
+        first_log_id = first_log_file.log_id
+
+        # we use the key object's name directly here for convenience
+        # but we can imagine it's been saved and retrieved 
+        # from a database or such
+        key_names = (first_log_file.key.name,)
+        deleter = Deleter(self._downloader.connection)
+        # import pdb; pdb.set_trace()
+        deleter.delete_files(
+            config['aws']['s3_bucket'],
+            key_names,
+            prefix=config['aws']['logs_path'])
+
         self._download_test_logs(force=True)
         self.assertNotEqual(
             first_log_id,
