@@ -1,3 +1,4 @@
+======================
 S3 log parsing library
 ======================
 
@@ -5,14 +6,14 @@ A python library to parse S3 log files.
 
 
 Warning
--------
+=======
 
 Unit tests currently require actual S3 credentials (and a bucket with logs) and can therefore only be run manually.
 Mocking the relevant parts of boto.s3 is on the roadmap. Contributions are welcome :)
 
 
 Purpose
--------
+=======
 
 Download S3 logs from a bucket, and parse them.
 
@@ -20,13 +21,13 @@ This application does not store the log objects generated and leaves that to oth
 
 
 Install
--------
+=======
 
 Eventually from pypi ...
 
 
 Use
----
+===
 
     from itertools import chain
     from pprint import pprint
@@ -54,24 +55,24 @@ Use
 
 
 Running tests
--------------
+=============
 
 First you need to specify the test config, which contains the AWS credentials and details of bucket tot test with.
 python-testconfig is used to manage the test configuration.
 
-Copy test_config.ini.sample to test_config.ini (in the same directory) and set correct values. 
+Copy test_config.ini.sample to test_config.ini (in the same directory) and set correct values::
 
     export NOSE_TESTCONFIG_AUTOLOAD_INI=`pwd`/test_config.ini
 
-To test with nose:
+To test with nose::
 
     python setup.py nosetests
 
-or running nosetests directly, 
+or running nosetests directly::
 
     nosetests -s --exe
 
-Directly and with coverage:
+Directly and with coverage::
 
     nosetests -s --exe --with-coverage --cover-package=lss3logs
 
@@ -79,15 +80,15 @@ Directly and with coverage:
 
 
 Code quality
-------------
+============
 
-Checking code with pylint:
+Checking code with pylint::
 
     pylint lss3logs
 
 
 TODO
-----
+====
 
 * mock boto output (see https://github.com/eykd/duo/blob/master/test_duo.py for an example)
 * fix as many errors as possbile reported by pylint
@@ -96,6 +97,6 @@ TODO
 
 
 Credits
--------
+=======
 
 The regular expression for parsing the log lines is copied from a script by "kkowalczyk" located at http://code.google.com/p/kjk/source/browse/trunk/scripts/test_parse_s3_log.py
