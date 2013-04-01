@@ -23,8 +23,11 @@ This application does not store the log objects generated and leaves that to oth
 Install
 =======
 
-Eventually from pypi ...
+From pypi, using pip::
 
+    pip install ls-s3-logs
+
+Or just grab the sourcepackage from pypi: https://pypi.python.org/pypi/ls-s3-logs/
 
 Use
 ===
