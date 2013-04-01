@@ -29,6 +29,8 @@ Eventually from pypi ...
 Use
 ===
 
+To get logs, simply use the Downloader class::
+
     from itertools import chain
     from pprint import pprint
     from lss3logs.download import Downloader
