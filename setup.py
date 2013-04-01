@@ -51,7 +51,7 @@ setup(
         'Development Status :: 4 - Beta',
         'Operating System :: OS Independent',
     ],
-    long_description=read_file('README.md'),
+    long_description=read_file('README.rst'),
     install_requires=required_packages,
     tests_require=required_packages + test_packages,
     test_suite='nose.collector',
